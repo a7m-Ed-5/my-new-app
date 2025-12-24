@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>مصاريفي</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- 🎬 Splash Screen (CSS auto-hide) -->
+<div id="splashScreen" class="splash">
+  <div class="splash-box">
+    <div class="splash-logo">💰</div>
+    <h1>مصاريفي</h1>
+    <p>إدارة الدخل والمصاريف بسهولة</p>
+    <div class="loader"></div>
+  </div>
+</div>
+
+<!-- 🔐 Lock Screen -->
+<div id="lockScreen" class="lock-screen hidden">
+  <div class="lock-card">
+
+    <!-- PIN -->
+    <div id="pinBox">
+      <h3>🔐 أدخل الرقم السري</h3>
+      <input type="password" id="pinInput" class="input">
+      <button class="btn" onclick="checkPin()">دخول</button>
+    </div>
+
+    <!-- Pattern -->
+    <div id="patternBox" class="hidden">
+      <h3>🔢 ارسم النمط</h3>
+      <div class="pattern-grid">
+        <div data-p="1"></div><div data-p="2"></div><div data-p="3"></div>
+        <div data-p="4"></div><div data-p="5"></div><div data-p="6"></div>
+        <div data-p="7"></div><div data-p="8"></div><div data-p="9"></div>
+      </div>
+      <button class="btn" onclick="checkPattern()">دخول</button>
+    </div>
+
+    <p id="lockMsg"></p>
+  </div>
+</div>
+
+<header class="app-header">📊 مصاريفي</header>
+
+<nav class="tabs">
+  <button class="tab active" data-view="dashboard">الرئيسية</button>
+  <button class="tab" data-view="income">الدخل</button>
+  <button class="tab" data-view="expenses">المصاريف</button>
+  <button class="tab" data-view="settings">الإعدادات</button>
+</nav>
+
+<main class="container">
+
+<!-- Dashboard -->
+<section id="view-dashboard" class="view active">
+  <div class="grid-3">
+    <div class="stat">الدخل<br><b id="sumIncome">0</b></div>
+    <div class="stat">المصاريف<br><b id="sumExpenses">0</b></div>
+    <div class="stat">المتبقي<br><b id="sumBalance">0</b></div>
+  </div>
+</section>
+
+<!-- Income -->
+<section id="view-income" class="view">
+  <input id="incomeAmount" class="input" type="number" placeholder="المبلغ">
+  <input id="incomeDate" class="input" type="date">
+  <button class="btn" onclick="addIncome()">إضافة دخل</button>
+  <div id="incomeList"></div>
+</section>
+
+<!-- Expenses -->
+<section id="view-expenses" class="view">
+  <input id="expenseName" class="input" placeholder="اسم المصروف">
+  <input id="expenseAmount" class="input" type="number" placeholder="المبلغ">
+  <button class="btn" onclick="addExpense()">إضافة مصروف</button>
+  <div id="expenseList"></div>
+</section>
+
+<!-- Settings -->
+<section id="view-settings" class="view">
+  <h3>🔐 نوع القفل</h3>
+  <select id="lockType" class="input">
+    <option value="pin">رقم سري</option>
+    <option value="pattern">نمط</option>
+    <option value="none">بدون قفل</option>
+  </select>
+  <button class="btn" onclick="saveLockType()">حفظ</button>
+
+  <h3>✏️ تغيير PIN</h3>
+  <input id="oldPin" class="input" placeholder="الحالي">
+  <input id="newPin" class="input" placeholder="الجديد">
+  <input id="confirmNewPin" class="input" placeholder="تأكيد الجديد">
+  <button class="btn" onclick="changePin()">تغيير</button>
+</section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>r="الجديد">
+  <input id="confirmNewPin" class="input" placeholder="تأكيد الجديد">
+  <button class="btn" onclick="changePin()">تغيير PIN</button>
+
+  <h3>📤📥 Excel</h3>
+  <button class="btn" onclick="exportExcel()">تصدير</button>
+  <input type="file" accept=".csv" onchange="importExcel(event)">
+</section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>        <input id="incomeDate" class="input" type="date" required />
+          </div>
+          <div class="row">
+            <input id="incomeSource" class="input" type="text" placeholder="المصدر (اختياري)" />
+            <input id="incomeNotes" class="input" type="text" placeholder="ملاحظات (اختياري)" />
+          </div>
+          <button class="btn" type="submit">حفظ الدخل</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">قائمة الدخل</div>
+        <div class="row">
+          <input id="incomeSearch" class="input" type="search" placeholder="بحث بالمصدر/الملاحظات..." />
+          <input id="incomeFrom" class="input" type="date" />
+          <input id="incomeTo" class="input" type="date" />
+          <button id="incomeFilterBtn" class="btn btn-ghost" type="button">تصفية</button>
+        </div>
+
+        <div id="incomeList" class="list"></div>
+        <div id="incomeEmpty" class="empty hidden">لا توجد سجلات دخل.</div>
+      </div>
+    </section>
+
+    <!-- EXPENSES -->
+    <section id="view-expenses" class="view" aria-label="المصاريف">
+      <div class="card">
+        <div class="card-title">إضافة مصروف</div>
+        <form id="expenseForm" class="form">
+          <div class="row">
+            <input id="expenseName" class="input" type="text" placeholder="اسم المصروف/المنتج *" required />
+            <input id="expenseAmount" class="input" type="number" step="0.01" min="0" placeholder="المبلغ *" required />
+          </div>
+          <div class="row">
+            <input id="expenseDate" class="input" type="date" required />
+            <input id="expenseCategory" class="input" type="text" placeholder="التصنيف (اختياري)" />
+          </div>
+          <div class="row">
+            <select id="expensePay" class="input">
+              <option value="">طريقة الدفع (اختياري)</option>
+              <option value="cash">كاش</option>
+              <option value="card">بطاقة</option>
+              <option value="wallet">محفظة</option>
+            </select>
+            <input id="expenseNotes" class="input" type="text" placeholder="ملاحظات (اختياري)" />
+          </div>
+          <button class="btn" type="submit">حفظ المصروف</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">قائمة المصاريف</div>
+        <div class="row">
+          <input id="expenseSearch" class="input" type="search" placeholder="بحث بالاسم..." />
+          <input id="expenseFrom" class="input" type="date" />
+          <input id="expenseTo" class="input" type="date" />
+        </div>
+        <div class="row">
+          <input id="expenseCategoryFilter" class="input" type="text" placeholder="تصفية بالتصنيف..." />
+          <select id="expensePayFilter" class="input">
+            <option value="">كل طرق الدفع</option>
+            <option value="cash">كاش</option>
+            <option value="card">بطاقة</option>
+            <option value="wallet">محفظة</option>
+          </select>
+          <button id="expenseFilterBtn" class="btn btn-ghost" type="button">تصفية</button>
+        </div>
+
+        <div id="expenseList" class="list"></div>
+        <div id="expenseEmpty" class="empty hidden">لا توجد مصاريف.</div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="view-reports" class="view" aria-label="التقارير">
+      <div class="card">
+        <div class="card-title">ملخص شهري</div>
+        <div class="row">
+          <input id="reportMonth" class="input" type="month" />
+          <button id="runReportsBtn" class="btn" type="button">عرض التقرير</button>
+        </div>
+
+        <div class="grid-3">
+          <div class="stat">
+            <div class="stat-label">دخل الشهر</div>
+            <div id="repIncome" class="stat-value">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">مصاريف الشهر</div>
+            <div id="repExpenses" class="stat-value">—</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">صافي الشهر</div>
+            <div id="repNet" class="stat-value">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">المصاريف حسب التصنيف</div>
+        <div id="catList" class="list"></div>
+        <div id="catEmpty" class="empty hidden">لا توجد بيانات.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">أعلى 10 مصاريف</div>
+        <div id="top10List" class="list"></div>
+        <div id="top10Empty" class="empty hidden">لا توجد بيانات.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">رسم بياني بسيط (اختياري)</div>
+        <canvas id="chartCanvas" width="900" height="380" class="chart"></canvas>
+        <div class="hint">الرسم يعرض أعلى التصنيفات (حسب المبلغ).</div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="view-settings" class="view" aria-label="الإعدادات">
+      <div class="card">
+        <div class="card-title">العملة</div>
+        <div class="row">
+          <select id="currencySelect" class="input">
+            <option value="EGP">EGP (افتراضي)</option>
+            <option value="USD">USD</option>
+            <option value="SAR">SAR</option>
+            <option value="AED">AED</option>
+            <option value="EUR">EUR</option>
+          </select>
+          <button id="saveCurrencyBtn" class="btn" type="button">حفظ</button>
+        </div>
+        <div class="hint">يتم حفظ العملة محليًا على الجهاز.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">الميزانية الشهرية</div>
+        <div class="row">
+          <input id="monthlyBudget" class="input" type="number" step="0.01" min="0" placeholder="ضع حد ميزانية للشهر (اختياري)" />
+          <button id="saveBudgetBtn" class="btn" type="button">حفظ</button>
+        </div>
+        <div class="hint">تحذير عند 80%، وتنبيه عند 100%.</div>
+      </div>
+
+      <div class="card danger">
+        <div class="card-title">حذف كل البيانات</div>
+        <p class="danger-text">هذا سيحذف الدخل والمصاريف والإعدادات من الجهاز نهائيًا.</p>
+        <button id="clearAllBtn" class="btn btn-danger" type="button">مسح كل البيانات</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">حالة التطبيق</div>
+        <div class="status-row">
+          <span>الاتصال:</span>
+          <strong id="netStatus">—</strong>
+        </div>
+        <div class="status-row">
+          <span>وضع دون إنترنت بعد أول تحميل:</span>
+          <strong>مدعوم</strong>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL (Edit/Delete confirm + forms) -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="نافذة">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div id="modalTitle" class="modal-title">—</div>
+        <button id="modalClose" class="icon-btn" type="button" aria-label="إغلاق">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+      <div id="modalActions" class="modal-actions"></div>
+    </div>
+  </div>
+
+  <script src="./db.js"></script>
+  <script src="./app.js"></script>
+  <script src="./sw-register.js"></script>
+</body>
+</html>
